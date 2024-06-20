@@ -51,7 +51,7 @@ function convertShopifyToFacebookGraphQLType(products) {
       return [
         product.id?.replace('gid://shopify/Product/', ''),
         product.title,
-        product.description || `${product.title} - description`,
+        `"${product.description || `${product.title} - description`}"`,
         product.totalInventory > 0 ? 'in stock' : 'out of stock',
         'new',
         `${variant.price} USD`, // Format price with currency
