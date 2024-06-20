@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Shopify-Facebook Sync</title>
+  <style>
+    .container {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 0 15px;
+    }
+
+    .wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      row-gap: 50px;
+    }
+
+    .button {
+      margin-top: 20px;
+      margin-left: auto;
+      margin-right: auto;
+      display: inline-block;
+      background: #fff;
+      border: 1px solid #e6e6e6;
+      padding: 10px 30px;
+      cursor: pointer;
+      font-size: 14px;
+      text-transform: uppercase;
+      border-radius: 6px;
+    }
+
+    #message .message {
+      color: #00b700;
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+
+    #message .link-category {
+      font-size: 14px;
+    }
+
+    #message .link-category span {
+      font-weight: bold;
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="wrapper">
+      <h1>Shopify-Facebook Catalog Sync</h1>
+      <button class="button" id="syncButton">Trigger Sync</button>
+      <div id="message"></div>
+    </div>
+  </div>
+
+  <script>
+    const syncButton = document.getElementById('syncButton');
+    const messageDiv = document.getElementById('message');
+
+    syncButton.addEventListener('click', async () => {
+      messageDiv.textContent = 'Syncing...';
+      try {
+        const response = await fetch('/trigger-sync');
+        const data = await response.json();
+        if (response.ok) {
+          messageDiv.innerHTML = `
+            <div class="message">
+              ${data.message}.
+            </div>
+            <div class="link-category">
+              <span>Link to catalog:</span> ${data.s3Link}
+            </div>
+          `;
+        } else {
+          messageDiv.textContent = `Error: ${data.error}`;
+        }
+      } catch (error) {
+        messageDiv.textContent = 'Error: Unable to reach the server.';
+      }
+    });
+  </script>
+</body>
+</html>
